@@ -1,3 +1,4 @@
+
 import express from 'express';
 import { SERVER_PORT } from '../global/environment';
 import socketIO from 'socket.io';
@@ -7,14 +8,15 @@ import * as socket from '../sockets/socket';
 
 export default class Server {
 
-    private static _instance: Server;
+    private static _intance: Server;
     public app: express.Application;
     public port: number;
 
     public io: socketIO.Server;
     private httpServer: http.Server;
 
-    private constructor(){
+    private constructor() {
+
         this.app = express();
         this.port = SERVER_PORT;
 
@@ -26,24 +28,35 @@ export default class Server {
     }
 
     public static get instance() {
-        return this._instance || (this._instance = new this());
+        return this._intance || ( this._intance = new this() );
     }
 
     private escucharSockets() {
         console.log('Escuchando conexiones - sockets');
 
         this.io.on('connection', cliente => {
-            console.log('Cliente conectado');
+            //console.log('Cliente conectado');
+
+            // Configurar Usuario
+            socket.conectarCliente( cliente );
+            
+            socket.configurarUsuario( cliente, this.io );
+            
+            //console.log(cliente.id);
+            //socket.conectarCliente( cliente );
             socket.mensaje ( cliente, this.io );
             //Desconectar
             socket.desconectar( cliente );
 
             
+
+            
         });
     }
 
-    start( callback: Function){
+    start( callback: any ) {
 
-        this.httpServer.listen(this.port, callback);
+        this.httpServer.listen( this.port, callback );
+
     }
 }
