@@ -38,15 +38,18 @@ export default class Server {
             //console.log('Cliente conectado');
 
             // Configurar Usuario
-            socket.conectarCliente( cliente );
+            socket.conectarCliente( cliente , this.io );
             
             socket.configurarUsuario( cliente, this.io );
+
+            // Obtener usuarios
+            socket.obtenerUsuarios( cliente, this.io );
             
             //console.log(cliente.id);
             //socket.conectarCliente( cliente );
             socket.mensaje ( cliente, this.io );
             //Desconectar
-            socket.desconectar( cliente );
+            socket.desconectar( cliente, this.io );
 
             
 
